@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.authweb.mapper.AdminRoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.authweb.domain.AdminRole" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+      id,name,description
+    </sql>
+
+    <select id="findByUserId" resultMap="BaseResultMap" >
+        SELECT DISTINCT R.*
+        FROM admin_role R
+        LEFT JOIN admin_user_role UR ON UR.roleId=R.id
+        WHERE UR.userId=#{userId}
+    </select>
+
+    <insert id="insertUserRoles" parameterType="com.example.authweb.domain.AdminUserRole">
+        INSERT INTO admin_user_role (id, userId, roleId)
+        VALUES
+        <foreach collection="userRoles" item="userRole" index="index" separator=",">
+            (#{userRole.id}, #{userRole.userId},#{userRole.roleId})
+        </foreach>
+    </insert>
+
+    <insert id="insertRoleResources" parameterType="com.example.authweb.domain.AdminRoleResource">
+        INSERT INTO admin_role_resource (id, roleId, resourceId)
+        VALUES
+        <foreach collection="roleResources" item="roleResource" index="index" separator=",">
+            (#{roleResource.id}, #{roleResource.roleId},#{roleResource.resourceId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleResources">
+        DELETE FROM admin_role_resource WHERE roleId = #{roleId} AND resourceId IN
+        <foreach collection="resourcesIds" item="resourcesId" open="(" close=")" separator="," index="index">
+            #{resourcesId}
+        </foreach>
+    </delete>
+
+</mapper>
