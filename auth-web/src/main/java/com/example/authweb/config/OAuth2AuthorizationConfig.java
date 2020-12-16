@@ -92,7 +92,7 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 //                        .jdbc().dataSource(dataSource())
 //                        .passwordEncoder(passwordEncoder)
 //                        .withClient("umc_client_id")
-//                        .accessTokenValiditySeconds(3000)
+//                        .accessTokenValiditySeconds(3)
 //                        .scopes("GOODS", "ORDERS")
 //                        .authorizedGrantTypes("password")
 //                        .secret("123456")

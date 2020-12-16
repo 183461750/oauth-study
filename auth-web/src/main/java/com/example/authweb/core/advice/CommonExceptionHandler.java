@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,6 +53,15 @@ public class CommonExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ApiResponse accessDeniedExceptionHandler(Exception e){
         CommonException ce = new CommonException(50002, e.getMessage());
+        logger.debug(e.getMessage(), e);
+        return ApiResponse.fail(ce);
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(OAuth2Exception.class)
+    public ApiResponse insufficientAuthenticationExceptionHandler(OAuth2Exception e){
+        CommonException ce = new CommonException(50003, e.getMessage());
         logger.debug(e.getMessage(), e);
         return ApiResponse.fail(ce);
     }
